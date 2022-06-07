@@ -1,0 +1,66 @@
+#!/usr/bin/env node
+
+const debug = require('debug')
+const yargs = require('yargs/yargs')(process.argv.slice(2))
+const DiscordFS = require('../src/discordFS/')
+const HTTPServer = require('../src/httpServer')
+
+debug.enable('*') // Enable logging
+
+// Parse option
+// Env vars will be parsed as option
+// ie DDRIVE_HTTP_PORT will be parsed as httpPort
+const args = yargs
+    .env('DDRIVE')
+    .option('httpPort', {
+        alias: 'P',
+        describe: 'Port of HTTP server',
+        type: 'number',
+    })
+    .option('auth', {
+        alias: 'A',
+        describe: 'Username password separated by ":". ie - admin:password',
+        type: 'string',
+    })
+    .option('token', {
+        alias: 'T',
+        describe: 'Discord bot/user token',
+        required: true,
+        type: 'string',
+    })
+    .option('channelId', {
+        alias: 'C',
+        describe: 'Text channel id where data will be stored',
+        required: true,
+        type: 'string',
+    })
+    .config()
+    .argv
+
+// Extract arguments
+const {
+    token, auth, channelId, httpPort,
+} = args
+
+//
+// App entry point
+//
+const startApp = async () => {
+    // Boot discordFS
+    const discordFS = new DiscordFS({ token, channelId })
+    await discordFS.load() // Build file index
+
+    // Create HTTP Server
+    const httpServer = new HTTPServer(discordFS, { httpPort, auth })
+    httpServer.build()
+}
+
+// Start app
+startApp()
+    .then()
+    .catch((err) => {
+        const appDebug = debug('app')
+        if (err.message.includes('Unknown Channel')) appDebug(`=== APP CRASHED :: INVALID CHANNEL_ID`)
+        else if (err.message.includes('Unauthorized')) appDebug('=== APP CRASHED :: INVALID TOKEN')
+        else appDebug('=== APP CRASHED :: UNKNOWN ERROR === \n', err)
+    })

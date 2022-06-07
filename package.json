@@ -1,0 +1,49 @@
+{
+  "name": "@forscht/ddrive",
+  "version": "3.5.1",
+  "description": "A lightweight cloud storage system using discord as storage device written in nodejs",
+  "main": "src/index.js",
+  "author": "Darshan Patel <darshanhihoriya@gmail.com> (https://github.com/forscht/ddrive)",
+  "homepage": "https://github.com/forscht/ddrive",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/forscht/ddrive/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/forscht/ddrive.git"
+  },
+  "scripts": {
+    "start": "node bin/ddrive",
+    "lint": "eslint --ext mjs,js,ts"
+  },
+  "bin": {
+    "ddrive": "bin/ddrive",
+    "dclone": "bin/dclone"
+  },
+  "engines": {
+    "node": "16.x"
+  },
+  "devDependencies": {
+    "@forscht/eslint-config": "latest"
+  },
+  "eslintConfig": {
+    "extends": "@forscht"
+  },
+  "dependencies": {
+    "@discordjs/rest": "^0.1.0-canary.0",
+    "debug": "^4.3.2",
+    "lodash": "^4.17.21",
+    "uuid": "^8.3.2",
+    "yargs": "^17.1.1"
+  },
+  "keywords": [
+    "discord",
+    "filesystem",
+    "channel",
+    "server",
+    "http server",
+    "discord file system",
+    "discord strage"
+  ]
+}
